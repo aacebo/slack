@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { KApp } from '@kustomer/apps-server-sdk';
-import { App as SApp } from '@slack/bolt';
+import { App as SApp, ExpressReceiver } from '@slack/bolt';
 import fs from 'fs';
 import path from 'path';
 
@@ -18,10 +18,14 @@ if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
   throw new Error('clientId and clientSecret are required');
 }
 
+if (!process.env.SLACK_CLIENT_ID || !process.env.SLACK_CLIENT_SECRET || !process.env.SLACK_SIGNING_SECRET) {
+  throw new Error('slack must be properly configured');
+}
+
 const port = +(process.env.PORT || 3000);
 const slackPort = process.env.SLACK_PORT || 3001;
 const authStore = new SlackAuthStore();
-const sapp = new SApp({
+const receiver = new ExpressReceiver({
   clientId: process.env.SLACK_CLIENT_ID,
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -36,6 +40,7 @@ const sapp = new SApp({
   ]
 });
 
+const sapp = new SApp({ receiver });
 const kapp = new KApp<SlackSettings>({
   app: pkg.name,
   version: pkg.version,
@@ -92,6 +97,7 @@ const kapp = new KApp<SlackSettings>({
   }
 });
 
+kapp.app.use(receiver.app);
 kapp.on('conversation' as any, 'update', handlers.onConversationUpdate(kapp));
 
 (async () => {
