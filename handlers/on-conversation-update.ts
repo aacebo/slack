@@ -12,7 +12,13 @@ export function onConversationUpdate(
   return async (e: Event<Conversation>) => {
     if (!e.data.attributes.lastMessageIn) return;
 
-    kapp.log.info(e.data.attributes.lastMessageIn);
+    const message = await kapp.in(e.orgId).messages.getById(
+      e.data.attributes.lastMessageIn.id
+    );
+
+    if (!message) return;
+
+    kapp.log.info(message);
 
     const settings = await kapp.in(e.orgId).settings.get();
 
@@ -24,7 +30,7 @@ export function onConversationUpdate(
 
     // await sapp.client.chat.postMessage({
     //   channel: settings.channelId,
-    //   text:
+    //   text: message.
     // });
   };
 }
