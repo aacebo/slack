@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { KApp } from '@kustomer/apps-server-sdk';
 import { App as SApp, ExpressReceiver } from '@slack/bolt';
+import { InstallProvider } from '@slack/oauth';
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
@@ -30,7 +31,7 @@ const receiver = new ExpressReceiver({
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   installationStore: authStore,
-  installerOptions: { stateVerification: false },
+  stateSecret: 'my-state-secret',
   scopes: [
     'channels:read',
     'chat:write',
@@ -40,7 +41,13 @@ const receiver = new ExpressReceiver({
   ]
 });
 
-const sapp = new SApp({ receiver });
+const installer = new InstallProvider({
+  clientId: process.env.SLACK_CLIENT_ID,
+  clientSecret: process.env.SLACK_CLIENT_SECRET,
+  stateSecret: 'my-state-secret'
+});
+
+const sapp = new SApp({ receiver});
 const kapp = new KApp<SlackSettings>({
   app: pkg.name,
   version: pkg.version,
@@ -97,17 +104,16 @@ const kapp = new KApp<SlackSettings>({
   }
 });
 
+kapp.useCustomSettings('Slack', '', '/web/build');
+kapp.on('conversation', 'update', handlers.onConversationUpdate(kapp, sapp, authStore));
+kapp.onCommand('get-settings', handlers.onGetSettings(kapp));
+kapp.onCommand('set-settings', handlers.onSetSettings(kapp));
+kapp.onCommand('get-team-channels', handlers.onGetTeamChannels(sapp, authStore));
+receiver.app.get('/install', handlers.onSlackInstall(installer));
 kapp.app.use(receiver.app);
 kapp.app.use(
   '/views',
   express.static(path.join(process.cwd(), '/web/build'))
-);
-
-kapp.useCustomSettings('Slack', '', '/web/build');
-kapp.on(
-  'conversation',
-  'update',
-  handlers.onConversationUpdate(kapp, sapp, authStore)
 );
 
 (async () => {

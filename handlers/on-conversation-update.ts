@@ -20,13 +20,14 @@ export function onConversationUpdate(
 
     const settings = await kapp.in(e.orgId).settings.get();
 
-    if (!settings) return;
+    if (!settings || !settings.channelId) return;
 
-    const session = auth.get(settings.teamId);
+    const session = auth.get(e.orgId);
 
-    if (!session) return;
+    if (!session || !session.bot) return;
 
     await sapp.client.chat.postMessage({
+      token: session.bot.token,
       channel: settings.channelId,
       text: message.preview
     });

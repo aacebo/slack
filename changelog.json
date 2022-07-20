@@ -3,5 +3,6 @@
   "0.0.1": "add message roles",
   "0.0.2": "update url",
   "0.0.3": "change event type",
-  "0.0.4": "add settings page"
+  "0.0.4": "add settings page",
+  "0.0.5": "add more commands"
 }
