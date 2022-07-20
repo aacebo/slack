@@ -14,7 +14,7 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@kustomer/apps-server-sdk": "^0.0.21",
+    "@kustomer/apps-server-sdk": "^0.0.22",
     "@slack/bolt": "^3.12.0",
     "@slack/oauth": "^2.5.4",
     "dotenv": "^16.0.1"

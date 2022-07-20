@@ -39,7 +39,7 @@ const receiver = new ExpressReceiver({
   ]
 });
 
-new SApp({ receiver });
+const sapp = new SApp({ receiver });
 const kapp = new KApp<SlackSettings>({
   app: pkg.name,
   version: pkg.version,
@@ -97,7 +97,11 @@ const kapp = new KApp<SlackSettings>({
 });
 
 kapp.app.use(receiver.app);
-kapp.on('conversation' as any, 'update', handlers.onConversationUpdate(kapp));
+kapp.on(
+  'conversation',
+  'update',
+  handlers.onConversationUpdate(kapp, sapp, authStore)
+);
 
 (async () => {
   try {

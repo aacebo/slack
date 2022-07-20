@@ -1,7 +1,29 @@
-import { Event, KApp } from '@kustomer/apps-server-sdk';
+import { Conversation, Event, KApp } from '@kustomer/apps-server-sdk';
+import { App as SApp } from '@slack/bolt';
 
-export function onConversationUpdate(app: KApp) {
-  return async (e: Event<any>) => {
-    app.log.info(JSON.stringify(e, undefined, 2));
+import { SlackAuthStore } from '../auth-store';
+import { SlackSettings } from '../settings';
+
+export function onConversationUpdate(
+  kapp: KApp<SlackSettings>,
+  _sapp: SApp,
+  auth: SlackAuthStore
+) {
+  return async (e: Event<Conversation>) => {
+    const settings = await kapp.in(e.orgId).settings.get();
+
+    if (!settings) return;
+
+    const session = auth.get(settings.teamId);
+
+    if (!session) return;
+    if (!e.data.attributes.lastMessageIn) return;
+
+    kapp.log.info(e.data.attributes.lastMessageIn);
+
+    // await sapp.client.chat.postMessage({
+    //   channel: settings.channelId,
+    //   text:
+    // });
   };
 }
