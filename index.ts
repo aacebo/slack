@@ -29,7 +29,7 @@ const receiver = new ExpressReceiver({
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   installationStore: authStore,
-  stateSecret: 'testing123',
+  installerOptions: { stateVerification: false },
   scopes: [
     'channels:read',
     'chat:write',
