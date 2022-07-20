@@ -11,7 +11,6 @@ export default function Settings() {
   return (
     <Button
       onClick={() => {
-        window.location.href = `${process.env.BASE_URL}/install?orgId=`;
         window.Kustomer.showModal({
           type: 'redirect',
           content: {
@@ -33,7 +32,7 @@ export default function Settings() {
         });
       }}
     >
-      <img src={`${process.env.BASE_URL}/assets/icon.png`} />
+      <img src='assets/icon.png' />
       Add To Slack
     </Button>
   );

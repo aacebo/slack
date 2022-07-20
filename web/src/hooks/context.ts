@@ -1,6 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export function useContext(ctx?: any) {
-  const [value, setValue] = useState(ctx);
+import { ContextService } from '../services';
+
+export function useContext() {
+  const [value, setValue] = useState(ContextService.context$.value);
+
+  useEffect(() => {
+    ContextService.context$.next(value);
+  }, [value]);
+
   return { value, setValue };
 };
