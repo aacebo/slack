@@ -23,7 +23,6 @@ if (!process.env.SLACK_CLIENT_ID || !process.env.SLACK_CLIENT_SECRET || !process
 }
 
 const port = +(process.env.PORT || 3000);
-const slackPort = process.env.SLACK_PORT || 3001;
 const authStore = new SlackAuthStore();
 const receiver = new ExpressReceiver({
   clientId: process.env.SLACK_CLIENT_ID,
@@ -40,7 +39,7 @@ const receiver = new ExpressReceiver({
   ]
 });
 
-const sapp = new SApp({ receiver });
+new SApp({ receiver });
 const kapp = new KApp<SlackSettings>({
   app: pkg.name,
   version: pkg.version,
@@ -102,7 +101,6 @@ kapp.on('conversation' as any, 'update', handlers.onConversationUpdate(kapp));
 
 (async () => {
   try {
-    await sapp.start(slackPort);
     await kapp.start(port, process.env.NODE_ENV === 'local');
 
     // kapp.log.info(await kapp.in('aacebo').getToken());
