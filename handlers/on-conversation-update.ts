@@ -6,7 +6,7 @@ import { SlackSettings } from '../settings';
 
 export function onConversationUpdate(
   kapp: KApp<SlackSettings>,
-  _sapp: SApp,
+  sapp: SApp,
   auth: SlackAuthStore
 ) {
   return async (e: Event<Conversation>) => {
@@ -18,8 +18,6 @@ export function onConversationUpdate(
 
     if (!message) return;
 
-    kapp.log.info(message);
-
     const settings = await kapp.in(e.orgId).settings.get();
 
     if (!settings) return;
@@ -28,9 +26,9 @@ export function onConversationUpdate(
 
     if (!session) return;
 
-    // await sapp.client.chat.postMessage({
-    //   channel: settings.channelId,
-    //   text: message.
-    // });
+    await sapp.client.chat.postMessage({
+      channel: settings.channelId,
+      text: message.preview
+    });
   };
 }
