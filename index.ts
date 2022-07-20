@@ -3,6 +3,7 @@ import { KApp } from '@kustomer/apps-server-sdk';
 import { App as SApp, ExpressReceiver } from '@slack/bolt';
 import fs from 'fs';
 import path from 'path';
+import express from 'express';
 
 import pkg from './package.json';
 import changelog from './changelog.json';
@@ -97,6 +98,12 @@ const kapp = new KApp<SlackSettings>({
 });
 
 kapp.app.use(receiver.app);
+kapp.app.use(
+  '/views',
+  express.static(path.join(process.cwd(), '/web/build'))
+);
+
+kapp.useCustomSettings('Slack', '', '/web/build');
 kapp.on(
   'conversation',
   'update',
