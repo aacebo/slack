@@ -1,0 +1,106 @@
+import 'dotenv/config';
+import { KApp } from '@kustomer/apps-server-sdk';
+import { App as SApp } from '@slack/bolt';
+import fs from 'fs';
+import path from 'path';
+
+import pkg from './package.json';
+import changelog from './changelog.json';
+import { SlackSettings } from './settings';
+import { SlackAuthStore } from './auth-store';
+import * as handlers from './handlers';
+
+if (!process.env.BASE_URL) {
+  throw new Error('baseUrl is required');
+}
+
+if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
+  throw new Error('clientId and clientSecret are required');
+}
+
+const port = +(process.env.PORT || 3000);
+const slackPort = process.env.SLACK_PORT || 3001;
+const authStore = new SlackAuthStore();
+const sapp = new SApp({
+  clientId: process.env.SLACK_CLIENT_ID,
+  clientSecret: process.env.SLACK_CLIENT_SECRET,
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  installationStore: authStore,
+  stateSecret: 'testing123',
+  scopes: [
+    'channels:read',
+    'chat:write',
+    'groups:read',
+    'im:read',
+    'mpim:read'
+  ]
+});
+
+const kapp = new KApp<SlackSettings>({
+  app: pkg.name,
+  version: pkg.version,
+  title: 'Slack',
+  visibility: 'public',
+  description: fs.readFileSync(path.join(__dirname, 'description.md')).toString(),
+  dependencies: [],
+  default: false,
+  system: false,
+  url: process.env.BASE_URL,
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  iconUrl: `${process.env.BASE_URL}/assets/icon.png`,
+  env: 'qa',
+  changelog,
+  roles: [
+    'org.user.customer.read',
+    'org.user.customer.write',
+    'org.user.message.read',
+    'org.permission.customer.read',
+    'org.permission.customer.create',
+    'org.permission.customer.update',
+    'org.permission.message.read'
+  ],
+  appDetails: {
+    appDeveloper: {
+      name: 'Kustomer',
+      website: 'https://kustomer.com',
+      supportEmail: 'support@kustomer.com',
+    },
+    externalPlatform: {
+      name: 'Slack',
+      website: 'https://slack.com',
+    },
+  },
+  screenshots: [],
+  settings: {
+    default: {
+      teamId: {
+        type: 'string',
+        hidden: false,
+        defaultValue: '',
+        description: 'the slack organization you belong to',
+        required: false
+      },
+      channelId: {
+        type: 'string',
+        hidden: false,
+        defaultValue: '',
+        description: 'the slack channel where notifications will be sent',
+        required: false
+      }
+    }
+  }
+});
+
+kapp.on('conversation' as any, 'create', handlers.onConversationUpdate(kapp));
+
+(async () => {
+  try {
+    await sapp.start(slackPort);
+    await kapp.start(port, process.env.NODE_ENV === 'local');
+
+    // kapp.log.info(await kapp.in('aacebo').getToken());
+  } catch (err) {
+    kapp.log.error(JSON.stringify(err, undefined, 2));
+  }
+})();
