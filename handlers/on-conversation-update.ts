@@ -10,6 +10,10 @@ export function onConversationUpdate(
   auth: SlackAuthStore
 ) {
   return async (e: Event<Conversation>) => {
+    if (!e.data.attributes.lastMessageIn) return;
+
+    kapp.log.info(e.data.attributes.lastMessageIn);
+
     const settings = await kapp.in(e.orgId).settings.get();
 
     if (!settings) return;
@@ -17,9 +21,6 @@ export function onConversationUpdate(
     const session = auth.get(settings.teamId);
 
     if (!session) return;
-    if (!e.data.attributes.lastMessageIn) return;
-
-    kapp.log.info(e.data.attributes.lastMessageIn);
 
     // await sapp.client.chat.postMessage({
     //   channel: settings.channelId,
