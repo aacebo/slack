@@ -92,7 +92,7 @@ const kapp = new KApp<SlackSettings>({
   }
 });
 
-kapp.on('conversation' as any, 'create', handlers.onConversationUpdate(kapp));
+kapp.on('conversation' as any, 'update', handlers.onConversationUpdate(kapp));
 
 (async () => {
   try {
