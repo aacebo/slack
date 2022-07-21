@@ -19,7 +19,7 @@ export default function Settings() {
           content: {
             title: 'INSTALL IN SLACK',
             iconUrl: `${url.protocol}//${url.host}/assets/icon.png`,
-            description: 'You will need to go to Slack and install the Kustomer app.\nClick Go to Slack below.',
+            description: 'You will need to go to Slack and install the Kustomer app.\nClick "Install In Slack" below.',
             primaryDataKt: 'goToSlack',
             secondaryDataKt: 'cancelAddSlack',
             showCancelButton: true,

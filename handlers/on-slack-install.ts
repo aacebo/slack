@@ -12,7 +12,7 @@ export function onSlackInstall(installer: InstallProvider) {
       return next(new BadRequestError('orgId is required'));
     }
 
-    res.redirect(await installer.generateInstallUrl({
+    const options = {
       metadata: req.query.orgId.toString(),
       scopes: [
         'channels:read',
@@ -21,6 +21,20 @@ export function onSlackInstall(installer: InstallProvider) {
         'im:read',
         'mpim:read'
       ]
-    }));
+    };
+
+    const state = await installer.stateStore?.generateStateParam(options, new Date());
+    const url = await installer.generateInstallUrl({
+      metadata: req.query.orgId.toString(),
+      scopes: [
+        'channels:read',
+        'chat:write',
+        'groups:read',
+        'im:read',
+        'mpim:read'
+      ]
+    }, true, state);
+
+    res.redirect(url);
   };
 }
