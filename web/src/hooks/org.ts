@@ -23,5 +23,5 @@ export function useOrg() {
     AppState.org$.next(value);
   }, [value]);
 
-  return { value, setValue };
+  return value;
 }

@@ -1,12 +1,13 @@
 import { Button } from '@mui/material';
 
-import { useOrg } from '../hooks';
+import { useChannels, useOrg } from '../hooks';
 
 export default function Settings() {
+  useChannels();
   const org = useOrg();
   const url = new URL(process.env.PUBLIC_URL);
 
-  if (!org.value) {
+  if (!org) {
     return <></>;
   }
 
@@ -25,7 +26,7 @@ export default function Settings() {
             showCancelButton: true,
             actionButton: {
               text: 'Install In Slack',
-              linkUrl: `${url.protocol}//${url.host}/slack/install?orgId=${org.value?.id}`,
+              linkUrl: `${url.protocol}//${url.host}/slack/install?orgId=${org?.id}`,
             }
           }
         }, () => {
