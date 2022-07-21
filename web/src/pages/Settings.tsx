@@ -25,7 +25,7 @@ export default function Settings() {
             showCancelButton: true,
             actionButton: {
               text: 'Install In Slack',
-              linkUrl: `${url.protocol}//${url.host}/auth?orgId=${org.value?.id}`,
+              linkUrl: `${url.protocol}//${url.host}/slack/install?orgId=${org.value?.id}`,
             }
           }
         }, () => {

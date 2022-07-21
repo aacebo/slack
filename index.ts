@@ -109,7 +109,7 @@ kapp.on('conversation', 'update', handlers.onConversationUpdate(kapp, sapp, auth
 kapp.onCommand('get-settings', handlers.onGetSettings(kapp));
 kapp.onCommand('set-settings', handlers.onSetSettings(kapp));
 kapp.onCommand('get-team-channels', handlers.onGetTeamChannels(sapp, authStore));
-kapp.onAuth(handlers.onSlackInstall(installer));
+kapp.app.get('/slack/install', handlers.onSlackInstall(installer));
 kapp.app.use(receiver.app);
 kapp.app.use(
   '/views',

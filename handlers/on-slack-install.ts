@@ -24,16 +24,7 @@ export function onSlackInstall(installer: InstallProvider) {
     };
 
     const state = await installer.stateStore?.generateStateParam(options, new Date());
-    const url = await installer.generateInstallUrl({
-      metadata: req.query.orgId.toString(),
-      scopes: [
-        'channels:read',
-        'chat:write',
-        'groups:read',
-        'im:read',
-        'mpim:read'
-      ]
-    }, true, state);
+    const url = await installer.generateInstallUrl(options, true, state);
 
     res.redirect(url);
   };
