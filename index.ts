@@ -44,6 +44,7 @@ const receiver = new ExpressReceiver({
 const installer = new InstallProvider({
   clientId: process.env.SLACK_CLIENT_ID,
   clientSecret: process.env.SLACK_CLIENT_SECRET,
+  installationStore: authStore,
   stateSecret: 'my-slack-secret'
 });
 
@@ -109,7 +110,7 @@ kapp.on('conversation', 'update', handlers.onConversationUpdate(kapp, sapp, auth
 kapp.onCommand('get-settings', handlers.onGetSettings(kapp));
 kapp.onCommand('set-settings', handlers.onSetSettings(kapp));
 kapp.onCommand('get-team-channels', handlers.onGetTeamChannels(sapp, authStore));
-kapp.app.get('/slack/install', handlers.onSlackInstall(installer));
+kapp.onAuth(handlers.onSlackInstall(installer));
 kapp.app.use(receiver.app);
 kapp.app.use(
   '/views',
