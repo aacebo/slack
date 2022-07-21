@@ -4,14 +4,12 @@ import { App as SApp, ExpressReceiver } from '@slack/bolt';
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
-import url from 'url';
 
 import pkg from './package.json';
 import changelog from './changelog.json';
 import { SlackSettings } from './settings';
 import { SlackAuthStore } from './auth-store';
 import * as handlers from './handlers';
-import * as utils from './utils';
 
 if (!process.env.BASE_URL) {
   throw new Error('baseUrl is required');
@@ -37,23 +35,10 @@ const receiver = new ExpressReceiver({
     stateVerification: false,
     directInstall: true,
     installPathOptions: {
-      beforeRedirection: async (req, res) => {
-        if (!req.url) return false;
-
-        const query = url.parse(req.url, true).query;
-
-        if (!query.orgId) return false;
-
-        res.setHeader('Set-Cookie', [`orgId=${query.orgId}; Secure; HttpOnly; Path=/; Max-Age=600`]);
-        return true;
-      }
+      beforeRedirection: handlers.onAuth()
     },
     callbackOptions: {
-      beforeInstallation: async (opts, req) => {
-        console.log(opts);
-        console.log(utils.getCookie('orgId', req.headers.cookie));
-        return true;
-      }
+      beforeInstallation: handlers.onAuthComplete()
     }
   },
   scopes: [
