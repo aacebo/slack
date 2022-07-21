@@ -6,34 +6,30 @@ export default function Settings() {
   const ctx = useContext();
   const url = new URL(process.env.PUBLIC_URL);
 
-  console.log(ctx.value);
-
   return (
     <Button
       onClick={() => {
         window.Kustomer.showModal({
           type: 'redirect',
           content: {
-            title: 'ADD STORE',
-            iconUrl: `${url.protocol}//${url.host}/assets/icon2.png`,
-            description: 'You will need to go to Shopify to add a store.\nClick Go to Shopify below.',
-            primaryDataKt: 'goToShopify',
-            secondaryDataKt: 'cancelAddStore',
+            title: 'INSTALL IN SLACK',
+            iconUrl: `${url.protocol}//${url.host}/assets/icon.png`,
+            description: 'You will need to go to Slack and install the Kustomer app.\nClick Go to Slack below.',
+            primaryDataKt: 'goToSlack',
+            secondaryDataKt: 'cancelAddSlack',
             showCancelButton: true,
             actionButton: {
-              text: 'Go to Shopify',
+              text: 'Install In Slack',
               linkUrl: `${url.protocol}//${url.host}/auth?orgId=`,
-            },
-            alertTagText: 'To connect a new store, make sure you sign out of all other stores in Shopify.',
-            alertTagType: 'warning',
+            }
           }
         }, () => {
 
         });
       }}
     >
-      <img src='assets/icon.png' />
-      Add To Slack
+      <img src={`${url.protocol}//${url.host}/assets/icon.png`} />
+      Install In Slack
     </Button>
   );
 }
