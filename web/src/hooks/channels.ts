@@ -6,7 +6,7 @@ export function useChannels() {
   useEffect(() => {
     window.Kustomer.command.run(
       'slack.app.slack--get-team-channels',
-      { body: null },
+      { body: { } },
       (_err: Error | null, res: any) => {
         console.log(res);
       });
