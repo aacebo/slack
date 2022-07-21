@@ -11,6 +11,7 @@ import changelog from './changelog.json';
 import { SlackSettings } from './settings';
 import { SlackAuthStore } from './auth-store';
 import * as handlers from './handlers';
+import * as utils from './utils';
 
 if (!process.env.BASE_URL) {
   throw new Error('baseUrl is required');
@@ -43,14 +44,14 @@ const receiver = new ExpressReceiver({
 
         if (!query.orgId) return false;
 
-        res.setHeader('x-kustomer-org-id', query.orgId);
+        res.setHeader('Set-Cookie', [`orgId=${query.orgId}; Secure; HttpOnly; Path=/; Max-Age=600`]);
         return true;
       }
     },
     callbackOptions: {
       beforeInstallation: async (opts, req) => {
         console.log(opts);
-        console.log(req.headers['x-kustomer-org-id']);
+        console.log(utils.getCookie('orgId', req.headers.cookie));
         return true;
       }
     }
