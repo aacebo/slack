@@ -14,7 +14,7 @@ export function onAuth(installer: InstallProvider) {
 
     const options: InstallURLOptions = {
       metadata: req.query.orgId.toString(),
-      redirectUri: `${process.env.BASE_URL}/auth/redirect?orgId=${req.query.orgId}`,
+      redirectUri: `${process.env.BASE_URL}/auth/redirect`,
       scopes: [
         'channels:read',
         'chat:write',
@@ -24,8 +24,7 @@ export function onAuth(installer: InstallProvider) {
       ]
     };
 
-    // const state = await installer.stateStore?.generateStateParam(options, new Date());
-    const url = await installer.generateInstallUrl(options);
+    const url = await installer.generateInstallUrl(options, false);
 
     res.redirect(url);
   };
