@@ -6,8 +6,11 @@ export default function Settings() {
   const ctx = useContext();
   const url = new URL(process.env.PUBLIC_URL);
 
+  console.log(ctx.value);
+
   return (
     <Button
+      variant='contained'
       onClick={() => {
         window.Kustomer.showModal({
           type: 'redirect',
@@ -28,7 +31,11 @@ export default function Settings() {
         });
       }}
     >
-      <img src={`${url.protocol}//${url.host}/assets/icon.png`} />
+      <img
+        src={`${url.protocol}//${url.host}/assets/icon.png`}
+        width='20px'
+        style={{ marginRight: '5px' }}
+      />
       Install In Slack
     </Button>
   );
