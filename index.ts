@@ -112,7 +112,8 @@ kapp.on('conversation', 'update', handlers.onConversationUpdate(kapp, sapp, auth
 kapp.onCommand('get-settings', handlers.onGetSettings(kapp));
 kapp.onCommand('set-settings', handlers.onSetSettings(kapp));
 kapp.onCommand('get-team-channels', handlers.onGetTeamChannels(sapp, authStore));
-kapp.onAuth(handlers.onSlackInstall(installer));
+kapp.onAuth(handlers.onAuth(installer));
+kapp.onAuthComplete(handlers.onAuthComplete(installer));
 kapp.app.use(receiver.app);
 kapp.app.use(
   '/views',

@@ -2,7 +2,7 @@ import { BadRequestError } from '@kustomer/apps-server-sdk';
 import { InstallProvider, InstallURLOptions } from '@slack/oauth';
 import express from 'express';
 
-export function onSlackInstall(installer: InstallProvider) {
+export function onAuth(installer: InstallProvider) {
   return async (
     req: express.Request,
     res: express.Response,
@@ -14,7 +14,7 @@ export function onSlackInstall(installer: InstallProvider) {
 
     const options: InstallURLOptions = {
       metadata: req.query.orgId.toString(),
-      redirectUri: `${process.env.BASE_URL}/slack/oauth_redirect?orgId=${req.query.orgId}`,
+      redirectUri: `${process.env.BASE_URL}/auth/redirect?orgId=${req.query.orgId}`,
       scopes: [
         'channels:read',
         'chat:write',
