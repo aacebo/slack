@@ -24,7 +24,7 @@ export function onSlackInstall(installer: InstallProvider) {
     };
 
     const state = await installer.stateStore?.generateStateParam(options, new Date());
-    const url = await installer.generateInstallUrl(options, true, state);
+    const url = await installer.generateInstallUrl(options, false, state);
 
     res.redirect(url);
   };
