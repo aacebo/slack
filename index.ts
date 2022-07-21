@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { KApp } from '@kustomer/apps-server-sdk';
 import { App as SApp, ExpressReceiver } from '@slack/bolt';
-import { InstallProvider } from '@slack/oauth';
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
+import url from 'url';
 
 import pkg from './package.json';
 import changelog from './changelog.json';
@@ -31,8 +31,30 @@ const receiver = new ExpressReceiver({
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   installationStore: authStore,
-  installerOptions: { stateVerification: false },
   stateSecret: 'my-slack-secret',
+  installerOptions: {
+    stateVerification: false,
+    directInstall: true,
+    installPathOptions: {
+      beforeRedirection: async (req, res) => {
+        if (!req.url) return false;
+
+        const query = url.parse(req.url, true).query;
+
+        if (!query.orgId) return false;
+
+        res.setHeader('x-kustomer-org-id', query.orgId);
+        return true;
+      }
+    },
+    callbackOptions: {
+      beforeInstallation: async (opts, req) => {
+        console.log(opts);
+        console.log(req.headers['x-kustomer-org-id']);
+        return true;
+      }
+    }
+  },
   scopes: [
     'channels:read',
     'chat:write',
@@ -42,15 +64,7 @@ const receiver = new ExpressReceiver({
   ]
 });
 
-const installer = new InstallProvider({
-  clientId: process.env.SLACK_CLIENT_ID,
-  clientSecret: process.env.SLACK_CLIENT_SECRET,
-  installationStore: authStore,
-  stateSecret: 'my-slack-secret',
-  stateVerification: false
-});
-
-const sapp = new SApp({ receiver});
+const sapp = new SApp({ receiver });
 const kapp = new KApp<SlackSettings>({
   app: pkg.name,
   version: pkg.version,
@@ -112,8 +126,6 @@ kapp.on('conversation', 'update', handlers.onConversationUpdate(kapp, sapp, auth
 kapp.onCommand('get-settings', handlers.onGetSettings(kapp));
 kapp.onCommand('set-settings', handlers.onSetSettings(kapp));
 kapp.onCommand('get-team-channels', handlers.onGetTeamChannels(sapp, authStore));
-kapp.onAuth(handlers.onAuth(installer));
-kapp.onAuthComplete(handlers.onAuthComplete(installer));
 kapp.app.use(receiver.app);
 kapp.app.use(
   '/views',
