@@ -8,6 +8,6 @@ export function onGetTeamChannels(sapp: SApp, auth: SlackAuthStore) {
 
     if (!session || !session.bot) return;
 
-    return sapp.client.groups.list({ token: session.bot.token });
+    return sapp.client.channels.list({ token: session.bot.token });
   };
 }
