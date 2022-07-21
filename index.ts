@@ -31,6 +31,7 @@ const receiver = new ExpressReceiver({
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   installationStore: authStore,
+  installerOptions: { stateVerification: false },
   stateSecret: 'my-slack-secret',
   scopes: [
     'channels:read',
@@ -45,7 +46,8 @@ const installer = new InstallProvider({
   clientId: process.env.SLACK_CLIENT_ID,
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   installationStore: authStore,
-  stateSecret: 'my-slack-secret'
+  stateSecret: 'my-slack-secret',
+  stateVerification: false
 });
 
 const sapp = new SApp({ receiver});

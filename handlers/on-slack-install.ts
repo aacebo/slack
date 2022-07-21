@@ -1,5 +1,5 @@
 import { BadRequestError } from '@kustomer/apps-server-sdk';
-import { InstallProvider } from '@slack/oauth';
+import { InstallProvider, InstallURLOptions } from '@slack/oauth';
 import express from 'express';
 
 export function onSlackInstall(installer: InstallProvider) {
@@ -12,8 +12,9 @@ export function onSlackInstall(installer: InstallProvider) {
       return next(new BadRequestError('orgId is required'));
     }
 
-    const options = {
+    const options: InstallURLOptions = {
       metadata: req.query.orgId.toString(),
+      redirectUri: `${process.env.BASE_URL}/slack/oauth_redirect?orgId=${req.query.orgId}`,
       scopes: [
         'channels:read',
         'chat:write',
@@ -23,8 +24,8 @@ export function onSlackInstall(installer: InstallProvider) {
       ]
     };
 
-    const state = await installer.stateStore?.generateStateParam(options, new Date());
-    const url = await installer.generateInstallUrl(options, false, state);
+    // const state = await installer.stateStore?.generateStateParam(options, new Date());
+    const url = await installer.generateInstallUrl(options);
 
     res.redirect(url);
   };
