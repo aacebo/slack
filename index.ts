@@ -42,6 +42,7 @@ const receiver = new ExpressReceiver({
     }
   },
   scopes: [
+    'groups:read',
     'channels:read',
     'chat:write',
     'im:read',
