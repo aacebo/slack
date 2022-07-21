@@ -12,7 +12,7 @@ export default function App() {
     window.Kustomer.initialize({ }, (context: any) => {
       ctx.setValue(context);
 
-      if (ctx) {
+      if (context) {
         window.Kustomer.resize();
       }
     });
