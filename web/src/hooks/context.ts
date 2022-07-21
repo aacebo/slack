@@ -10,4 +10,4 @@ export function useContext() {
   }, [value]);
 
   return { value, setValue };
-};
+}

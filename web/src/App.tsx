@@ -16,6 +16,15 @@ export default function App() {
         window.Kustomer.resize();
       }
     });
+
+    window.Kustomer.request({
+      method: 'get',
+      url: '/v1/orgs/current'
+    }, (err: Error | null, data: any) => {
+      if (err) throw err;
+
+      console.log(data);
+    });
   }, []);
 
   return (
