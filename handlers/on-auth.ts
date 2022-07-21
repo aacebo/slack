@@ -24,6 +24,7 @@ export function onAuth(installer: InstallProvider) {
       ]
     };
 
+    req.headers['x-kustomer-org-id'] = req.query.orgId.toString();
     const url = await installer.generateInstallUrl(options, false);
 
     res.redirect(url);

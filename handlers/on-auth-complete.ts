@@ -6,6 +6,7 @@ export function onAuthComplete(installer: InstallProvider) {
     req: express.Request,
     res: express.Response
   ) => {
+    console.log(req.get('x-kustomer-org-id'));
     await installer.handleCallback(req, res);
   };
 }
