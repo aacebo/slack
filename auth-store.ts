@@ -13,6 +13,8 @@ export class SlackAuthStore implements InstallationStore {
   }
 
   async storeInstallation<AuthVersion extends 'v1' | 'v2'>(install: Installation<AuthVersion, boolean>) {
+    console.log(install);
+
     if (install.metadata) {
       this._orgInstalls[install.metadata] = install;
     }
