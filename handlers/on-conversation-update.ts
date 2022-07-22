@@ -13,6 +13,7 @@ export function onConversationUpdate(
 ) {
   return async (e: Event<Conversation>) => {
     kapp.log.info('inbound conversation.update event');
+    kapp.log.info(JSON.stringify(e.data.relationships, undefined, 2));
 
     if (!e.data.attributes.lastMessageIn) {
       return kapp.log.info('ignoring due to lack of lastMessageIn');
@@ -48,7 +49,31 @@ export function onConversationUpdate(
       await sapp.client.chat.postMessage({
         token: session.bot.token,
         channel: settings.default.channelId,
-        text: message.preview
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: message.preview || ''
+            }
+          },
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `*Status:* ${e.data.attributes.status}`
+            },
+            accessory: {
+              type: 'button',
+              url: '',
+              text: {
+                type: 'plain_text',
+                text: 'View',
+                emoji: true
+              }
+            }
+          }
+        ]
       });
 
       MESSAGES_SENT[message.id] = true;
