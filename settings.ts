@@ -1,4 +1,6 @@
 export interface SlackSettings {
-  readonly teamId?: string;
-  readonly channelId?: string;
+  readonly default: {
+    readonly teamId?: string;
+    readonly channelId?: string;
+  };
 }

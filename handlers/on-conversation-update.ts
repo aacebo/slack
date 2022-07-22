@@ -20,7 +20,7 @@ export function onConversationUpdate(
 
     const settings = await kapp.in(e.orgId).settings.get();
 
-    if (!settings || !settings.channelId) return;
+    if (!settings || !settings.default?.channelId) return;
 
     const session = auth.get(e.orgId);
 
@@ -28,7 +28,7 @@ export function onConversationUpdate(
 
     await sapp.client.chat.postMessage({
       token: session.bot.token,
-      channel: settings.channelId,
+      channel: settings.default.channelId,
       text: message.preview
     });
   };
