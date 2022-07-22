@@ -4,6 +4,8 @@ import { App as SApp } from '@slack/bolt';
 import { SlackAuthStore } from '../auth-store';
 import { SlackSettings } from '../settings';
 
+const MESSAGES_SENT: { [id: string]: boolean | undefined; } = { };
+
 export function onConversationUpdate(
   kapp: KApp<SlackSettings>,
   sapp: SApp,
@@ -14,6 +16,10 @@ export function onConversationUpdate(
 
     if (!e.data.attributes.lastMessageIn) {
       return kapp.log.info('ignoring due to lack of lastMessageIn');
+    }
+
+    if (MESSAGES_SENT[e.data.attributes.lastMessageIn.id]) {
+      return kapp.log.warn('message already sent, ignoring');
     }
 
     const message = await kapp.in(e.orgId).messages.getById(
@@ -45,6 +51,7 @@ export function onConversationUpdate(
         text: message.preview
       });
 
+      MESSAGES_SENT[message.id] = true;
       kapp.log.info('complete');
     } catch (err) {
       kapp.log.error(err);

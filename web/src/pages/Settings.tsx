@@ -1,4 +1,5 @@
 import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import MatLockIcon from '@mui/icons-material/Lock';
 
 import { useChannels, useOrg, useSettings } from '../hooks';
 
@@ -46,7 +47,7 @@ export default function Settings() {
 
       {
         channels.length > 0 &&
-        <FormControl fullWidth>
+        <FormControl fullWidth style={{ marginTop: '10px' }}>
           <InputLabel id='channels-label'>Channels</InputLabel>
           <Select
             labelId='channels-label'
@@ -66,6 +67,7 @@ export default function Settings() {
               channels.map(c =>
                 <MenuItem value={c.id}>
                   {c.name}
+                  <MatLockIcon />
                 </MenuItem>
               )
             }
