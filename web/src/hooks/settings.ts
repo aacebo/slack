@@ -11,7 +11,7 @@ export function useSettings() {
       { body: { } },
       (_err: Error | null, res: any) => {
         if (res.responseBody) {
-          AppState.settings$.next(res.responseBody);
+          setValue(res.responseBody);
         }
       });
   }, []);
