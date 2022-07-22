@@ -45,5 +45,6 @@ export function onConversationUpdate(
     });
 
     kapp.log.info(res);
+    kapp.log.info('complete');
   };
 }
