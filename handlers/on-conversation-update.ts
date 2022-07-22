@@ -38,13 +38,17 @@ export function onConversationUpdate(
 
     kapp.log.info('sending message to slack...');
 
-    const res = await sapp.client.chat.postMessage({
-      token: session.bot.token,
-      channel: settings.default.channelId,
-      text: message.preview
-    });
+    try {
+      const res = await sapp.client.chat.postMessage({
+        token: session.bot.token,
+        channel: settings.default.channelId,
+        text: message.preview
+      });
 
-    kapp.log.info(res);
-    kapp.log.info('complete');
+      kapp.log.info(res);
+      kapp.log.info('complete');
+    } catch (err) {
+      kapp.log.error(err);
+    }
   };
 }
