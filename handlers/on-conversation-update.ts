@@ -16,15 +16,21 @@ export function onConversationUpdate(
       e.data.attributes.lastMessageIn.id
     );
 
-    if (!message) return;
-
-    const settings = await kapp.in(e.orgId).settings.get();
-
-    if (!settings || !settings.default?.channelId) return;
+    if (!message) {
+      return kapp.log.warn('message not found');
+    }
 
     const session = auth.get(e.orgId);
 
-    if (!session || !session.bot) return;
+    if (!session || !session.bot) {
+      return kapp.log.warn('auth session not found, sign in to your slack workplace');
+    }
+
+    const settings = await kapp.in(e.orgId).settings.get();
+
+    if (!settings || !settings.default?.channelId) {
+      return kapp.log.warn('a channel has not been selected in app settings');
+    }
 
     await sapp.client.chat.postMessage({
       token: session.bot.token,
