@@ -10,8 +10,6 @@ export function onConversationUpdate(
   auth: SlackAuthStore
 ) {
   return async (e: Event<Conversation>) => {
-    kapp.log.info(e);
-
     if (!e.data.attributes.lastMessageIn) return;
 
     const message = await kapp.in(e.orgId).messages.getById(
@@ -34,10 +32,10 @@ export function onConversationUpdate(
       return kapp.log.warn('a channel has not been selected in app settings');
     }
 
-    await sapp.client.chat.postMessage({
+    kapp.log.info(await sapp.client.chat.postMessage({
       token: session.bot.token,
       channel: settings.default.channelId,
       text: message.preview
-    });
+    }));
   };
 }
