@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { AppState } from '../state';
 
 export function useChannels() {
-  const [value] = useState(AppState.channels$.value);
+  const [value, setValue] = useState(AppState.channels$.value);
 
   useEffect(() => {
     window.Kustomer.command.run(
@@ -11,7 +11,8 @@ export function useChannels() {
       { body: { } },
       (_err: Error | null, res: any) => {
         if (res.responseBody) {
-          AppState.channels$.next(res.responseBody.channels);
+          AppState.channels$.next(res.responseBody.channels || []);
+          setValue(res.responseBody.channels || []);
         }
       });
   }, []);
