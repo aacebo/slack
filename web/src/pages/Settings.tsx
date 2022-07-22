@@ -8,7 +8,7 @@ export default function Settings() {
   const org = useOrg();
   const url = new URL(process.env.PUBLIC_URL);
 
-  if (!org || !settings.value) {
+  if (!org) {
     return <></>;
   }
 
@@ -45,7 +45,7 @@ export default function Settings() {
       </Button>
 
       {
-        channels.length > 0 &&
+        !!settings.value && channels.length > 0 &&
         <FormControl>
           <InputLabel id='channels-label'>Channels</InputLabel>
           <Select
