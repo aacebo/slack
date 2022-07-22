@@ -10,6 +10,8 @@ export function onConversationUpdate(
   auth: SlackAuthStore
 ) {
   return async (e: Event<Conversation>) => {
+    kapp.log.info(e);
+
     if (!e.data.attributes.lastMessageIn) return;
 
     const message = await kapp.in(e.orgId).messages.getById(
