@@ -39,13 +39,12 @@ export function onConversationUpdate(
     kapp.log.info('sending message to slack...');
 
     try {
-      const res = await sapp.client.chat.postMessage({
+      await sapp.client.chat.postMessage({
         token: session.bot.token,
         channel: settings.default.channelId,
         text: message.preview
       });
 
-      kapp.log.info(res);
       kapp.log.info('complete');
     } catch (err) {
       kapp.log.error(err);
