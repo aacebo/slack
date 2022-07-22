@@ -44,6 +44,7 @@ const receiver = new ExpressReceiver({
   scopes: [
     'groups:read',
     'channels:read',
+    'channels:join',
     'chat:write',
     'im:read',
     'mpim:read'
