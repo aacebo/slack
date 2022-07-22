@@ -59,7 +59,7 @@ export function onConversationUpdate(
             },
             accessory: {
               type: 'button',
-              url: '',
+              url: `https://aacebo.helpsimply.com/app/customers/${e.data.relationships?.customer?.data?.id}`,
               text: {
                 type: 'plain_text',
                 text: 'View',
