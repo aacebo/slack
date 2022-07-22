@@ -10,6 +10,8 @@ export function onConversationUpdate(
   auth: SlackAuthStore
 ) {
   return async (e: Event<Conversation>) => {
+    kapp.log.info('inbound conversation.update event');
+
     if (!e.data.attributes.lastMessageIn) {
       return kapp.log.info('ignoring due to lack of lastMessageIn');
     }
