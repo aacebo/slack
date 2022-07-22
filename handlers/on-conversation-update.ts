@@ -36,10 +36,14 @@ export function onConversationUpdate(
       return kapp.log.warn('a channel has not been selected in app settings');
     }
 
-    kapp.log.info(await sapp.client.chat.postMessage({
+    kapp.log.info('sending message to slack...');
+
+    const res = await sapp.client.chat.postMessage({
       token: session.bot.token,
       channel: settings.default.channelId,
       text: message.preview
-    }));
+    });
+
+    kapp.log.info(res);
   };
 }
