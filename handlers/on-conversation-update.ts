@@ -49,14 +49,8 @@ export function onConversationUpdate(
       await sapp.client.chat.postMessage({
         token: session.bot.token,
         channel: settings.default.channelId,
+        text: message.preview,
         blocks: [
-          {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: message.preview || ''
-            }
-          },
           {
             type: 'section',
             text: {
