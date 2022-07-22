@@ -110,7 +110,7 @@ const kapp = new KApp<SlackSettings>({
 kapp.useCustomSettings('Slack', '', '/web/build');
 kapp.on('conversation', 'update', handlers.onConversationUpdate(kapp, sapp, authStore));
 kapp.onCommand('get-settings', handlers.onGetSettings(kapp));
-kapp.onCommand('set-settings', handlers.onSetSettings(kapp));
+kapp.onCommand('set-settings', handlers.onSetSettings(kapp, sapp, authStore));
 kapp.onCommand('get-team-channels', handlers.onGetTeamChannels(sapp, authStore));
 kapp.app.use(receiver.app);
 kapp.app.use(

@@ -46,7 +46,7 @@ export default function Settings() {
 
       {
         channels.length > 0 &&
-        <FormControl>
+        <FormControl fullWidth>
           <InputLabel id='channels-label'>Channels</InputLabel>
           <Select
             labelId='channels-label'
