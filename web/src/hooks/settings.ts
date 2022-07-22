@@ -19,8 +19,8 @@ export function useSettings() {
   useEffect(() => {
     window.Kustomer.command.run(
       'slack.app.slack--set-settings',
-      { body: { } },
-      (err: Error | null, res: any) => {
+      { body: value },
+      (err: Error | null) => {
         if (err) throw err;
 
         AppState.settings$.next(value);
