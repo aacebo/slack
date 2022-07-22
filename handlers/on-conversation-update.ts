@@ -10,7 +10,9 @@ export function onConversationUpdate(
   auth: SlackAuthStore
 ) {
   return async (e: Event<Conversation>) => {
-    if (!e.data.attributes.lastMessageIn) return;
+    if (!e.data.attributes.lastMessageIn) {
+      return kapp.log.info('ignoring due to lack of lastMessageIn');
+    }
 
     const message = await kapp.in(e.orgId).messages.getById(
       e.data.attributes.lastMessageIn.id
